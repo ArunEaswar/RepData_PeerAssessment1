@@ -2,8 +2,7 @@
 title: "Reproducible Research: Peer Assessment 1"
 author: "Arun Mohan Sundaram"
 date: "04/03/2020"
-output: 
-html_document:
+output: md_document
 keep_md: true
 ---
 
