@@ -43,38 +43,48 @@ Loading and preprocessing the data
 
 ***Download the file and unzip it:***
 
-    library(knitr)
-    library(ggplot2)
-    library(data.table)
+``` r
+library(knitr)
+library(ggplot2)
+library(data.table)
+```
 
     ## Warning: package 'data.table' was built under R version 3.6.3
 
-    opts_chunk$set(echo = TRUE, results = 'hold')
+``` r
+opts_chunk$set(echo = TRUE, results = 'hold')
 
-    URL1 <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
-    FILE1 <- "Activity_monitoring_data.zip"
+URL1 <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
+FILE1 <- "Activity_monitoring_data.zip"
 
-    if(!file.exists(FILE1)) {
-      download.file(URL1, 
-                    destfile = FILE1, 
-                    method = "curl")
-      unzip(FILE1, exdir = ".")
-    }
+if(!file.exists(FILE1)) {
+  download.file(URL1, 
+                destfile = FILE1, 
+                method = "curl")
+  unzip(FILE1, exdir = ".")
+}
+```
 
 ***Reading CSV dataset:***
 
-    data_amd <- read.csv("activity.csv", header = TRUE, sep = ",", na.strings = "NA")
+``` r
+data_amd <- read.csv("activity.csv", header = TRUE, sep = ",", na.strings = "NA")
+```
 
 ***Taking a look at the data***
 
-    str(data_amd)
+``` r
+str(data_amd)
+```
 
     ## 'data.frame':    17568 obs. of  3 variables:
     ##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
     ##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
 
-    head(data_amd)
+``` r
+head(data_amd)
+```
 
     ##   steps       date interval
     ## 1    NA 2012-10-01        0
@@ -87,19 +97,23 @@ Loading and preprocessing the data
 What is mean total number of steps taken per day?
 -------------------------------------------------
 
-    #Removing the NA
-    data_amd_na <- is.na(as.character(data_amd$steps))
-    data_amd_Steps <- data_amd[!data_amd_na,]
+``` r
+#Removing the NA
+data_amd_na <- is.na(as.character(data_amd$steps))
+data_amd_Steps <- data_amd[!data_amd_na,]
 
-    #Steps taken each day and adding column to it
-    data_amd_Steps_day <- aggregate(steps ~ date, data = data_amd_Steps, sum)
-    colnames(data_amd_Steps_day) <- c("date", "steps")
+#Steps taken each day and adding column to it
+data_amd_Steps_day <- aggregate(steps ~ date, data = data_amd_Steps, sum)
+colnames(data_amd_Steps_day) <- c("date", "steps")
+```
 
 **1. Calculate the total number of steps taken per day**
 
-    str(data_amd_Steps_day)
+``` r
+str(data_amd_Steps_day)
 
-    head(data_amd_Steps_day,10)
+head(data_amd_Steps_day,10)
+```
 
     ## 'data.frame':    53 obs. of  2 variables:
     ##  $ date : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 2 3 4 5 6 7 9 10 11 12 ...
@@ -118,18 +132,22 @@ What is mean total number of steps taken per day?
 
 **2. Histogram of the total number of steps taken each day**
 
-    #Plotting the histogram
-    hist(as.numeric(data_amd_Steps_day$steps), breaks = 10, col = "blue", xlab = "Number of Steps", main= "Histogram of the total number of steps taken each day")
+``` r
+#Plotting the histogram
+hist(as.numeric(data_amd_Steps_day$steps), breaks = 10, col = "blue", xlab = "Number of Steps", main= "Histogram of the total number of steps taken each day")
+```
 
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 **3. Mean and median number of steps taken each day**
 
-    #Mean
-    mean(data_amd_Steps_day$steps)
+``` r
+#Mean
+mean(data_amd_Steps_day$steps)
 
-    #Median
-    median(data_amd_Steps_day$steps)
+#Median
+median(data_amd_Steps_day$steps)
+```
 
     ## [1] 10766.19
     ## [1] 10765
@@ -139,20 +157,24 @@ What is the average daily activity pattern?
 
 **1. Time series plot of the average number of steps taken**
 
-    #Calculating the average and adding columns
-    data_amd_Steps_AVG <- aggregate(steps ~ interval, data = data_amd, FUN = mean,na.rm = TRUE)
-    colnames(data_amd_Steps_AVG) <- c("interval", "average_steps")
+``` r
+#Calculating the average and adding columns
+data_amd_Steps_AVG <- aggregate(steps ~ interval, data = data_amd, FUN = mean,na.rm = TRUE)
+colnames(data_amd_Steps_AVG) <- c("interval", "average_steps")
 
-    #ploting the average number of steps taken 
-    ggplot(data_amd_Steps_AVG, aes(x = interval, y = average_steps)) + geom_line(col = "blue", size = 1) + labs(title = "Average Daily Activity Pattern", x = "Interval", y = "Steps")
+#ploting the average number of steps taken 
+ggplot(data_amd_Steps_AVG, aes(x = interval, y = average_steps)) + geom_line(col = "blue", size = 1) + labs(title = "Average Daily Activity Pattern", x = "Interval", y = "Steps")
+```
 
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 **2. The 5-minute interval that, on average, contains the maximum number
 of steps **
 
-    max_num_steps <- data_amd_Steps_AVG[which.max(data_amd_Steps_AVG$average_steps),]
-    max_num_steps
+``` r
+max_num_steps <- data_amd_Steps_AVG[which.max(data_amd_Steps_AVG$average_steps),]
+max_num_steps
+```
 
     ##     interval average_steps
     ## 104      835      206.1698
@@ -163,26 +185,32 @@ Imputing missing values
 **1. Calculate and report the total number of missing values in the
 dataset**
 
-    missing_values <- sum(is.na(data_amd$steps))
-    missing_values
+``` r
+missing_values <- sum(is.na(data_amd$steps))
+missing_values
+```
 
     ## [1] 2304
 
 **2. Strategy for filling in all of the missing values in the dataset -
 Missing values are replaced by the mean of that 5-minute interval**
 
-    fill_data_amd <- data_amd
-    data_amd_na <- which(is.na(fill_data_amd$steps))
-    #Fill missing values wuth mean of that 5-minute interval
-    fill_data_amd[data_amd_na,]$steps<-unlist(lapply(data_amd_na,FUN=function(data_amd_na){                data_amd_Steps_AVG[data_amd[data_amd_na,]$interval==data_amd_Steps_AVG$interval,]$average_steps }))
+``` r
+fill_data_amd <- data_amd
+data_amd_na <- which(is.na(fill_data_amd$steps))
+#Fill missing values wuth mean of that 5-minute interval
+fill_data_amd[data_amd_na,]$steps<-unlist(lapply(data_amd_na,FUN=function(data_amd_na){                data_amd_Steps_AVG[data_amd[data_amd_na,]$interval==data_amd_Steps_AVG$interval,]$average_steps }))
+```
 
 **3. Create a new dataset that is equal to the original dataset but with
 the missing data filled in**
 
-    summary(fill_data_amd)
-    #Making sure no NA
-    missing_values <- sum(is.na(fill_data_amd$steps))
-    missing_values
+``` r
+summary(fill_data_amd)
+#Making sure no NA
+missing_values <- sum(is.na(fill_data_amd$steps))
+missing_values
+```
 
     ##      steps                date          interval     
     ##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
@@ -197,18 +225,22 @@ the missing data filled in**
 **4. Histogram of the total number of steps taken each day and Calculate
 and report the mean and median total number of steps taken per day**
 
-    fill_data_amd_Steps_day <- aggregate(steps ~ date, data = fill_data_amd, sum)
-    colnames(fill_data_amd_Steps_day) <- c("date", "steps")
+``` r
+fill_data_amd_Steps_day <- aggregate(steps ~ date, data = fill_data_amd, sum)
+colnames(fill_data_amd_Steps_day) <- c("date", "steps")
 
-    hist(as.numeric(fill_data_amd_Steps_day$steps), breaks = 10, col = "blue", xlab = "Number of Steps", main= "Histogram of the total number of steps taken each day")
+hist(as.numeric(fill_data_amd_Steps_day$steps), breaks = 10, col = "blue", xlab = "Number of Steps", main= "Histogram of the total number of steps taken each day")
+```
 
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
-    #Calculating Mean with imputed dataset
-    mean(fill_data_amd_Steps_day$steps)
+``` r
+#Calculating Mean with imputed dataset
+mean(fill_data_amd_Steps_day$steps)
 
-    #Calculating Median with imputed dataset
-    median(fill_data_amd_Steps_day$steps)
+#Calculating Median with imputed dataset
+median(fill_data_amd_Steps_day$steps)
+```
 
     ## [1] 10766.19
     ## [1] 10766.19
@@ -220,14 +252,16 @@ Are there differences in activity patterns between weekdays and weekends?
 “weekday” and “weekend” indicating whether a given date is a weekday or
 weekend day**
 
-    #read into a new variable
-    data_amd_week <- data.table(data_amd)
-    #convert date into date func
-    data_amd_week$date <- as.Date(data_amd_week$date, format = "%Y-%m-%d")
-    #Check if it weekend or weekday
-    data_amd_week[, dayofweek := ifelse(weekdays(date) %in% c("Saturday", "Sunday"), "Weekend", "Weekday")]
-    data_amd_week$dayofweek <- as.factor(data_amd_week$dayofweek)
-    head(data_amd_week, 10)
+``` r
+#read into a new variable
+data_amd_week <- data.table(data_amd)
+#convert date into date func
+data_amd_week$date <- as.Date(data_amd_week$date, format = "%Y-%m-%d")
+#Check if it weekend or weekday
+data_amd_week[, dayofweek := ifelse(weekdays(date) %in% c("Saturday", "Sunday"), "Weekend", "Weekday")]
+data_amd_week$dayofweek <- as.factor(data_amd_week$dayofweek)
+head(data_amd_week, 10)
+```
 
     ##     steps       date interval dayofweek
     ##  1:    NA 2012-10-01        0   Weekday
@@ -245,10 +279,12 @@ weekend day**
 interval (x-axis) and the average number of steps taken, averaged across
 all weekday days or weekend days (y-axis)**
 
-    data_amd_week_steps <- aggregate(steps ~ interval+dayofweek, data = data_amd_week, FUN = mean)
-    ggplot(data_amd_week_steps, aes(x = interval, y = steps)) + 
-      geom_line(col = "blue", size = 1) + 
-      facet_wrap(~ dayofweek, nrow=2, ncol=1) + 
-      labs(x = "Interval", y = "Number of Steps")
+``` r
+data_amd_week_steps <- aggregate(steps ~ interval+dayofweek, data = data_amd_week, FUN = mean)
+ggplot(data_amd_week_steps, aes(x = interval, y = steps)) + 
+  geom_line(col = "blue", size = 1) + 
+  facet_wrap(~ dayofweek, nrow=2, ncol=1) + 
+  labs(x = "Interval", y = "Number of Steps")
+```
 
-![](PA1_template_files/figure-markdown_strict/unnamed-chunk-17-1.png)
+![](PA1_template_files/figure-markdown_github/unnamed-chunk-17-1.png)
